@@ -35,14 +35,14 @@ feed = feedparser.parse(PODCAST_URL)
 
 # Read the downloaded files list
 downloadedListFile = open(DOWNLOADED_LIST_FILE)
-downloadedList = downloadedListFile.readlines()
+downloadedList = downloadedListFile.read().splitlines()
 downloadedListFile.close()
 
 # Loop over all the entries in the feed
 for item in feed.entries:
     
     # Print out the entry found.
-    print "Entry Found: ", item.link
+    print "Entry Found:", item.link
 
     # Get the file name of the podcast
     fileName = item.link.split('/')[-1]
@@ -50,6 +50,7 @@ for item in feed.entries:
     # Check if the file is already downloaded
     if fileName in downloadedList:
         # Go to next file.
+        print "Not a new file. Skipping..."
         continue
 
     # File is not already downloaded
