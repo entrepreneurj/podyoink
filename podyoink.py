@@ -26,44 +26,45 @@ import urllib
 import sys
 
 # Set up some paths
-PODCAST_URL = 'http://downloads.bbc.co.uk/podcasts/radio4/fricomedy/rss.xml'
 DOWNLOADS_DIR = '/home/gberg/podcasts/'
 DOWNLOADED_LIST_FILE = '/home/gberg/.podyoink/downloaded.list'
+PODCAST_URLS = ['http://downloads.bbc.co.uk/podcasts/radio4/fricomedy/rss.xml','http://downloads.bbc.co.uk/podcasts/radio4/comedy/rss.xml','http://downloads.bbc.co.uk/podcasts/radio4extra/newsjack/rss.xml']
 
+for PODCAST_URL in PODCAST_URLS:
 # Parse the Atom Feed
-feed = feedparser.parse(PODCAST_URL)
+    feed = feedparser.parse(PODCAST_URL)
 
 # Read the downloaded files list
-downloadedListFile = open(DOWNLOADED_LIST_FILE)
-downloadedList = downloadedListFile.read().splitlines()
-downloadedListFile.close()
+    downloadedListFile = open(DOWNLOADED_LIST_FILE)
+    downloadedList = downloadedListFile.read().splitlines()
+    downloadedListFile.close()
 
 # Loop over all the entries in the feed
-for item in feed.entries:
-    
-    # Print out the entry found.
-    print "Entry Found:", item.link
+    for item in feed.entries:
 
-    # Get the file name of the podcast
-    fileName = item.link.split('/')[-1]
+# Print out the entry found.
+        print "Entry Found:", item.link
 
-    # Check if the file is already downloaded
-    if fileName in downloadedList:
-        # Go to next file.
-        print "Not a new file. Skipping..."
-        continue
+# Get the file name of the podcast
+        fileName = item.link.split('/')[-1]
 
-    # File is not already downloaded
-    print "New File. Downloading..."
+# Check if the file is already downloaded
+        if fileName in downloadedList:
+# Go to next file.
+            print "Not a new file. Skipping..."
+            continue
 
-    # Actually download the file
-    urllib.urlretrieve(item.link, DOWNLOADS_DIR + fileName)
+# File is not already downloaded
+        print "New File. Downloading..."
 
-    # Add the file to the list of done ones
-    listFile = open(DOWNLOADED_LIST_FILE, 'a')
-    listFile.write(fileName)
-    listFile.write("\n")
-    listFile.close()
+# Actually download the file
+        urllib.urlretrieve(item.link, DOWNLOADS_DIR+'/'+item.title +' - '+ fileName)
+
+# Add the file to the list of done ones
+        listFile = open(DOWNLOADED_LIST_FILE, 'a')
+        listFile.write(fileName)
+        listFile.write("\n")
+        listFile.close()
 
 print "Done"
 
