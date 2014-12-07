@@ -26,13 +26,17 @@ import urllib
 import sys
 
 # Set up some paths
-DOWNLOADS_DIR = '/home/gberg/podcasts/'
-DOWNLOADED_LIST_FILE = '/home/gberg/.podyoink/downloaded.list'
-PODCAST_URLS = ['http://downloads.bbc.co.uk/podcasts/radio4/fricomedy/rss.xml','http://downloads.bbc.co.uk/podcasts/radio4/comedy/rss.xml','http://downloads.bbc.co.uk/podcasts/radio4extra/newsjack/rss.xml']
+from config import *
+
+podcast_urls = []
+
+with open('feeds.csv','r') as f:
+    for entry in f:
+	podcast_urls.append(entry["feed"])	
 
 for PODCAST_URL in PODCAST_URLS:
 # Parse the Atom Feed
-    feed = feedparser.parse(PODCAST_URL)
+    feed = feedparser.parse(podcast_urls)
 
 # Read the downloaded files list
     downloadedListFile = open(DOWNLOADED_LIST_FILE)
